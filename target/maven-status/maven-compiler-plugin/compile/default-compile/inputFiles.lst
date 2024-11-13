@@ -1,0 +1,8 @@
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/CampusSyncApplication.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/WebConfig.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/controllers/HomeController.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/controllers/StudentController.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/controllers/request/LoginRequest.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/controllers/request/LoginResponse.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/domains/Student.java
+/home/victor/Documentos/repos/Web/campussync_app/backend/src/main/java/com/facade/pattern/campus_sync/services/auth/StudentService.java

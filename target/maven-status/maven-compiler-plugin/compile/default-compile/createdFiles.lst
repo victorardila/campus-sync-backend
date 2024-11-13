@@ -1,0 +1,8 @@
+com/facade/pattern/campus_sync/controllers/request/LoginRequest.class
+com/facade/pattern/campus_sync/services/auth/StudentService.class
+com/facade/pattern/campus_sync/domains/Student.class
+com/facade/pattern/campus_sync/controllers/request/LoginResponse.class
+com/facade/pattern/campus_sync/controllers/StudentController.class
+com/facade/pattern/campus_sync/WebConfig.class
+com/facade/pattern/campus_sync/controllers/HomeController.class
+com/facade/pattern/campus_sync/CampusSyncApplication.class
