@@ -4,11 +4,11 @@ Proyecto de pago de matricula financiera de una universidad
 
 ## Problema
 
-![Problema](https://github.com/user-attachments/assets/80c9df62-c629-4c2e-8ee1-09e80796c281)
+![Problema](https://github.com/user-attachments/assets/83fc9414-1827-4538-9d8a-7d2a8987c83d)
 
 ## Diagrama de clases
 
-![Patron-Facade-especificado](https://github.com/user-attachments/assets/9a8f5d32-b86a-4074-9d0d-57cd4fe15fae)
+![Class Diagram](https://github.com/user-attachments/assets/7bbdab34-db5b-4323-9b3d-eccf69b77532)
 
 ## Diagrama de componentes
 
