@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.facade.pattern.campus_sync.domains.Course;
 import com.facade.pattern.campus_sync.domains.Invoice;
+import com.facade.pattern.campus_sync.domains.Payment;
 import com.facade.pattern.campus_sync.domains.Scholarship;
 import com.facade.pattern.campus_sync.domains.Student;
 import com.facade.pattern.campus_sync.services.academic.CourseService;
@@ -51,8 +52,8 @@ public class EnrollmentFacade implements IEnrollmentFacade {
     }
 
     @Override
-    public boolean processPayment(String paymentMethod, double amount) {
-        return paymentService.processPayment(paymentMethod, amount, paymentMethod, 0, null); // Llama al servicio para
+    public boolean processPayment(Payment payment) {
+        return paymentService.processPayment(payment.getPaymentMethod(), payment.getAmount(), payment.getNumber(), payment.getCvv(), payment.getExpirationDate()); // Llama al servicio para
                                                                                              // procesar el pago
     }
 

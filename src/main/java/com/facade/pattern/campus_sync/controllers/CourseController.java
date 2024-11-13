@@ -18,7 +18,7 @@ public class CourseController {
     private CourseService courseService;
 
     // Obtener todos los cursos
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Course>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
         return new ResponseEntity<>(courses, HttpStatus.OK);
@@ -31,16 +31,16 @@ public class CourseController {
         return new ResponseEntity<>("Cursos guardados exitosamente", HttpStatus.CREATED);
     }
 
-    // Obtener un curso por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
-        Optional<Course> course = courseService.getCourseById(id);
-        return course.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+    // // Obtener un curso por ID
+    // @GetMapping("/{id}")
+    // public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
+    //     Optional<Course> course = courseService.getCourseById(id);
+    //     return course.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+    //             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    // }
 
     // Obtener un curso por código
-    @GetMapping("/code/{code}")
+    @GetMapping("/{code}")
     public ResponseEntity<Course> getCourseByCode(@PathVariable String code) {
         Optional<Course> course = courseService.getCourseByCode(code);
         return course.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
@@ -48,16 +48,16 @@ public class CourseController {
     }
 
     // Guardar un nuevo curso
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<String> saveCourse(@RequestBody Course course) {
         courseService.saveCourse(course); // Guardar el curso
         return new ResponseEntity<>("Curso guardado exitosamente", HttpStatus.CREATED);
     }
 
     // Actualizar un curso
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateCourse(@PathVariable Long id, @RequestBody Course courseDetails) {
-        Course updatedCourse = courseService.updateCourse(id, courseDetails);
+    @PutMapping("/update/{code}")
+    public ResponseEntity<String> updateCourse(@PathVariable String code, @RequestBody Course courseDetails) {
+        Course updatedCourse = courseService.updateCourse(code, courseDetails);
         if (updatedCourse != null) {
             return new ResponseEntity<>("Curso actualizado exitosamente", HttpStatus.OK);
         } else {
@@ -66,12 +66,12 @@ public class CourseController {
     }
 
     // Eliminar un curso
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
-        Optional<Course> courseOptional = courseService.getCourseById(id); // Verificar si el curso existe
+    @DeleteMapping("/delete/{code}")
+    public ResponseEntity<String> deleteCourse(@PathVariable String code) {
+        Optional<Course> courseOptional = courseService.getCourseByCode(code); // Verificar si el curso existe
         if (courseOptional.isPresent()) {
-            courseService.deleteCourse(id); // Eliminar el curso
-            return new ResponseEntity<>("Curso eliminado exitosamente", HttpStatus.NO_CONTENT);
+            courseService.deleteCourse(code); // Eliminar el curso
+            return new ResponseEntity<>("Curso eliminado exitosamente", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Curso no encontrado", HttpStatus.NOT_FOUND);
         }

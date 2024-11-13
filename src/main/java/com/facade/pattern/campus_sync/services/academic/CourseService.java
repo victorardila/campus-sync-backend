@@ -34,8 +34,8 @@ public class CourseService {
     }
 
     // Actualizar un curso existente (en memoria)
-    public Course updateCourse(Long id, Course courseDetails) {
-        Optional<Course> courseOptional = getCourseById(id);
+    public Course updateCourse(String code, Course courseDetails) {
+        Optional<Course> courseOptional = getCourseByCode(code);
         if (courseOptional.isPresent()) {
             Course course = courseOptional.get();
             course.setCode(courseDetails.getCode());
@@ -53,8 +53,8 @@ public class CourseService {
     }
 
     // Eliminar un curso por su ID (en memoria)
-    public void deleteCourse(Long id) {
-        courses.removeIf(course -> course.getId().equals(id));
+    public void deleteCourse(String code) {
+        courses.removeIf(course -> course.getCode().equals(code));
     }
 
     // Guardar múltiples cursos (en memoria)

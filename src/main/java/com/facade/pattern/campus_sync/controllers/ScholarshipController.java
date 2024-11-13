@@ -1,6 +1,6 @@
 package com.facade.pattern.campus_sync.controllers;
 
-import com.facade.pattern.campus_sync.domains.Course;
+
 import com.facade.pattern.campus_sync.domains.Scholarship;
 import com.facade.pattern.campus_sync.services.academic.ScholarshipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class ScholarshipController {
     private ScholarshipService scholarshipService;
 
     // Obtener todas las becas
-    @GetMapping
+    @GetMapping("/all")
     public List<Scholarship> getAllScholarships() {
         return scholarshipService.getAllScholarships();
     }
@@ -42,14 +42,15 @@ public class ScholarshipController {
     }
 
     // Crear una nueva beca
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<String> createScholarship(@RequestBody Scholarship scholarship) {
+        
         Scholarship createdScholarship = scholarshipService.createScholarship(scholarship);
         return new ResponseEntity<>("Beca creada exitosamente", HttpStatus.CREATED);
     }
 
     // Actualizar una beca existente
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateScholarship(@PathVariable Long id,
             @RequestBody Scholarship scholarshipDetails) {
         Scholarship updatedScholarship = scholarshipService.updateScholarship(id, scholarshipDetails);
@@ -60,13 +61,15 @@ public class ScholarshipController {
     }
 
     // Eliminar una beca
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteScholarship(@PathVariable Long id) {
         boolean isDeleted = scholarshipService.deleteScholarship(id);
         if (!isDeleted) {
             return new ResponseEntity<>("Beca no encontrada", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("Beca eliminada exitosamente", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Beca eliminada exitosamente", HttpStatus.OK);
     }
 
 }
+
+
