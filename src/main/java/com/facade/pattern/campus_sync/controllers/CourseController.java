@@ -34,9 +34,9 @@ public class CourseController {
     // // Obtener un curso por ID
     // @GetMapping("/{id}")
     // public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
-    //     Optional<Course> course = courseService.getCourseById(id);
-    //     return course.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-    //             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    // Optional<Course> course = courseService.getCourseById(id);
+    // return course.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+    // .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     // }
 
     // Obtener un curso por código
