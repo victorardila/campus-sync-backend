@@ -19,11 +19,13 @@ Proyecto de pago de matricula financiera de una universidad
 ### Configuraciones para conectar a MySQL
 
 ```text
-spring.application.name=campus_sync
+# Configuración de la base de datos MySQL
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/campus_sync?useSSL=false&serverTimezone=UTC
 spring.datasource.username=root
 spring.datasource.password=#Victor2002
+
+# Configuración de JPA e Hibernate
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
@@ -32,11 +34,13 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 ### Configuraciones para conectar a Aurora MySQL en AWS
 
 ```text
-spring.application.name=campus_sync
-spring.datasource.url=jdbc:mysql://aurora-db.cluster-xxxxxx.us-east-1.rds.amazonaws.com:3306/nombre_de_tu_base
+# Configuración de la base de datos MySQL
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://aurora-db.cluster-xxxxxx.us-east-1.rds.amazonaws.com:3306/nombre_de_tu_base?useSSL=false&serverTimezone=UTC
 spring.datasource.username=tu_usuario
 spring.datasource.password=tu_contraseña
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# Configuración de JPA e Hibernate
 spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
