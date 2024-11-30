@@ -41,3 +41,35 @@ spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 ```
+
+### Comandos de docker para Pop! Os
+
+- *`Configurar docker`*
+
+```bash
+# Agregar tu usuario al grupo docker
+sudo groupadd docker
+# Añadir tu usuario al grupo docker
+sudo usermod -aG docker $USER
+# Verificar que el usuario está realmente en el grupo docker
+groups $USER
+# Verificar permisos en docker.sock
+ls -l /var/run/docker.sock
+# verificar el estado de Docker
+snap services docker
+# listar los contenedores de Docker que están en ejecución
+docker ps
+```
+
+- *`Gestion de docker`*
+
+```bash
+# Iniciar Docker
+snap start docker
+# Reiniciar Docker
+snap restart docker
+# verificar el estado de Docker
+snap services docker
+# listar los contenedores de Docker que están en ejecución
+docker ps
+```
