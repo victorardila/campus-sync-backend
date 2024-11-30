@@ -48,7 +48,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 ### Comandos de docker para Pop! Os
 
-- *`Configurar docker`*
+- #### *`Configurar docker`*
 
 ```bash
 # Agregar tu usuario al grupo docker
@@ -65,7 +65,7 @@ snap services docker
 docker ps
 ```
 
-- *`Gestion de docker`*
+- #### *`Gestion de docker`*
 
 ```bash
 # Iniciar Docker
