@@ -2,6 +2,12 @@
 
 Proyecto de pago de matricula financiera de una universidad
 
+## Sprint Boot y Docker
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a9e32ce8-8523-47b4-83a6-fce54b05e894" alt="Docher and Sprint Boot" width="500"/>
+</p>
+
 ## Problema
 
 ![Problema](https://github.com/user-attachments/assets/83fc9414-1827-4538-9d8a-7d2a8987c83d)
