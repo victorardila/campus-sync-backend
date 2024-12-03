@@ -47,25 +47,24 @@ public class EnrollmentController {
             List<Course> courses = invoiceRequestDTO.getCourses();
             Scholarship scholarship = invoiceRequestDTO.getScholarship();
             Invoice invoice = enrollmentFacade.generateInvoice(student, courses, scholarship);
-            return ResponseEntity.status(HttpStatus.CREATED).body(invoice); // Retorna 201 Created con la factura generada
+            return ResponseEntity.status(HttpStatus.CREATED).body(invoice); // Retorna 201 Created con la factura
+                                                                            // generada
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al generar la factura: " + e.getMessage());
         }
     }
 
     @PostMapping("/processPayment")
-public ResponseEntity<String> processPayment(@RequestBody Payment payment) {
-    // Extrae el objeto Payment y el monto del objeto PaymentRequest
+    public ResponseEntity<String> processPayment(@RequestBody Payment payment) {
+        // Extrae el objeto Payment y el monto del objeto PaymentRequest
 
-
-    boolean paymentSuccess = enrollmentFacade.processPayment(payment);
-    if (paymentSuccess) {
-        return ResponseEntity.ok("Pago procesado correctamente. ID de transacción: " + payment.getTransactionId());
-    } else {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error en el pago");
+        boolean paymentSuccess = enrollmentFacade.processPayment(payment);
+        if (paymentSuccess) {
+            return ResponseEntity.ok("Pago procesado correctamente. ID de transacción: " + payment.getTransactionId());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error en el pago");
+        }
     }
-}
-
 
     @GetMapping("/confirmEnrollment")
     public ResponseEntity<String> confirmEnrollment() {
@@ -73,7 +72,8 @@ public ResponseEntity<String> processPayment(@RequestBody Payment payment) {
         if (confirmationMessage != null && !confirmationMessage.isEmpty()) {
             return ResponseEntity.ok(confirmationMessage); // Retorna 200 OK si la confirmación es exitosa
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la confirmación de la matrícula"); // Retorna 500 si falla la confirmación
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error en la confirmación de la matrícula"); // Retorna 500 si falla la confirmación
         }
     }
 }

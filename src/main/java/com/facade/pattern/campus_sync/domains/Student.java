@@ -1,6 +1,11 @@
 package com.facade.pattern.campus_sync.domains;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Student {
+    @Id
     private String id;
     private String name;
     private String academicProgram;

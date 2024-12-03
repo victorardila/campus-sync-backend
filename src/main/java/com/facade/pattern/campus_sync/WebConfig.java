@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
+    @SuppressWarnings("null")
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**") // Aplica a todas las rutas de tu API
@@ -15,6 +16,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                 .allowedHeaders("*") // Permitir todos los headers
                 .allowCredentials(true); // Si necesitas enviar cookies o credenciales
-
     }
 }

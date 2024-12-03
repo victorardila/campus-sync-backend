@@ -1,26 +1,26 @@
 package com.facade.pattern.campus_sync.controllers;
 
-import org.hibernate.hql.internal.ast.util.ASTUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.facade.pattern.campus_sync.controllers.request.LoginRequest;
 import com.facade.pattern.campus_sync.controllers.response.LoginResponse;
 import com.facade.pattern.campus_sync.domains.Student;
 import com.facade.pattern.campus_sync.services.auth.StudentService;
-
+import com.facade.pattern.campus_sync.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-
     private final StudentService studentService;
 
-    public StudentController() {
-        this.studentService = new StudentService();
+    @Autowired
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     // Obtener todos los estudiantes
@@ -32,9 +32,9 @@ public class StudentController {
     // Obtener un estudiante por ID
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable String id) {
-        Optional<Student> student = studentService.getStudentById(id);
-        return student.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return studentService.getStudentById(id)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResourceNotFoundException("Estudiante no encontrado con ID: " + id));
     }
 
     // Crear un nuevo estudiante
@@ -54,13 +54,13 @@ public class StudentController {
     }
 
     // Actualizar un estudiante
-    @PutMapping("/upadte/{id}")
+    @PutMapping("/update/{id}") // Corrige la ruta de "upadte" a "update"
     public ResponseEntity<String> updateStudent(@PathVariable String id, @RequestBody Student updatedStudent) {
         boolean updated = studentService.updateStudent(id, updatedStudent);
         if (updated) {
             return ResponseEntity.ok("Estudiante actualizado con éxito.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estudiante no encontrado.");
+            throw new ResourceNotFoundException("Estudiante no encontrado con ID: " + id);
         }
     }
 
@@ -71,7 +71,7 @@ public class StudentController {
         if (deleted) {
             return ResponseEntity.ok("Estudiante eliminado con éxito.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estudiante no encontrado.");
+            throw new ResourceNotFoundException("Estudiante no encontrado con ID: " + id);
         }
     }
 
@@ -80,11 +80,8 @@ public class StudentController {
         Optional<Student> student = studentService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 
         if (student.isPresent()) {
-            // Generar el token
-            // String token = ASTUtil.getTokenTypeName(Student.class, 15);
-            String[] tokengenate = ASTUtil.generateTokenNameCache(Student.class); // Aquí generamos el token para el
-                                                                                  // estudiante
-            String token = tokengenate.toString().split(";")[1];
+            // Generar un token único usando UUID
+            String token = UUID.randomUUID().toString(); // Genera un token único
             // Crear la respuesta con el token y el estudiante convertido a JSON
             LoginResponse response = new LoginResponse(token, student.get());
             return ResponseEntity.ok(response); // Devuelve 200 OK con el JSON del student y el token

@@ -8,7 +8,15 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "<div style='background-color: #212121; color: white; padding: 20px; text-align: center;'>" +
+        return "<html>" +
+                "<head>" +
+                "<style>" +
+                "body { margin: 0; padding: 0; }" + // Eliminar márgenes y padding del body
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div style='width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;background-color: #212121; color: white; text-align: center;'>"
+                +
                 "<pre style='font-family: monospace; line-height: 1; margin: 0;'>" +
                 "█▀▀▄ █▀▀█ █▀▀ █─█ █▀▀ █▀▀▄ █▀▀▄ \n" +
                 "█▀▀▄ █▄▄█ █── █▀▄ █▀▀ █──█ █──█ \n" +
@@ -21,6 +29,8 @@ public class HomeController {
                 +
                 "░█▄▄█ ░█─░█ ░█──░█ ░█─── ─▀▄▄▀ ░█▄▄▄█ 　 ░█▄▄▄█ ──░█── ░█──▀█ ░█▄▄█ 　 ░█─░█ ─▀▄▄▀ ░█──▀█ ▄█▄ ░█──▀█ ░█▄▄█ █ █ █"
                 +
-                "</pre></div>";
+                "</pre></div>" +
+                "</body>" +
+                "</html>";
     }
 }
