@@ -1,27 +1,32 @@
 package com.facade.pattern.campus_sync.services.payment;
 
 import com.facade.pattern.campus_sync.domains.Payment;
+import com.facade.pattern.campus_sync.repositories.PaymentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PaymentService {
 
-    private List<Payment> paymentList = new ArrayList<>();
-    private Long currentId = 1L;
+    private final PaymentRepository paymentRepository;
 
-    public boolean processPayment(String paymentMethod, double amount, String number, int cvv,
-                                  LocalDateTime expirationDate) {
+    @Autowired
+    public PaymentService(PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
+    }
+
+    // Procesar un pago
+    public Payment processPayment(String paymentMethod, double amount, String number, int cvv,
+            LocalDateTime expirationDate) {
         if (amount <= 0) {
-            return false;
+            throw new IllegalArgumentException("El monto debe ser mayor a 0.");
         }
 
         Payment payment = new Payment();
-        payment.setId(currentId++);
         payment.setPaymentMethod(paymentMethod);
         payment.setAmount(amount);
         payment.setNumber(number);
@@ -29,52 +34,58 @@ public class PaymentService {
         payment.setExpirationDate(expirationDate);
         payment.setPaymentDate(LocalDateTime.now());
         payment.setStatus("PENDING");
-        payment.setTransactionId("TXN-" + payment.getId()); // Generamos un transactionId
+        payment.setTransactionId(
+                "TXN-" + LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)); // ID
+                                                                                       // único
 
-        paymentList.add(payment);
-
-        if (amount > 0) {
-            payment.setStatus("COMPLETED");
-            return true;
-        }
-        return false;
+        // Cambiar el estado a COMPLETED si es exitoso
+        payment.setStatus("COMPLETED");
+        return paymentRepository.save(payment);
     }
 
-    public Optional<Payment> getPaymentById(Long id) {
-        return paymentList.stream().filter(payment -> payment.getId().equals(id)).findFirst();
-    }
-
+    // Obtener todos los pagos
     public List<Payment> getAllPayments() {
-        return new ArrayList<>(paymentList);
+        return paymentRepository.findAll();
     }
 
-    public boolean cancelPayment(Long id) {
-        Optional<Payment> paymentOptional = getPaymentById(id);
-
-        if (paymentOptional.isPresent()) {
-            Payment payment = paymentOptional.get();
-            payment.setStatus("CANCELED");
-            return true;
-        }
-        return false;
+    // Obtener un pago por ID
+    public Optional<Payment> getPaymentById(Long id) {
+        return Optional.ofNullable(paymentRepository.findById(id));
     }
 
+    // Obtener un pago por transactionId
     public Optional<Payment> getPaymentByTransactionId(String transactionId) {
-        return paymentList.stream()
-                .filter(payment -> payment.getTransactionId() != null
-                        && payment.getTransactionId().equals(transactionId))
-                .findFirst();
+        return paymentRepository.findByTransactionId(transactionId);
     }
 
-    // Nuevo método para cancelar un pago usando transactionId
-    public boolean cancelPaymentByTransactionId(String transactionId) {
-        Optional<Payment> paymentOptional = getPaymentByTransactionId(transactionId);
+    // Cancelar un pago por ID
+    public boolean cancelPayment(Long id) {
+        Optional<Payment> existingPayment = getPaymentById(id);
 
-        if (paymentOptional.isPresent()) {
-            Payment payment = paymentOptional.get();
+        if (existingPayment.isPresent()) {
+            Payment payment = existingPayment.get();
             payment.setStatus("CANCELED");
+            paymentRepository.save(payment); // Guardar el cambio en el repositorio
             return true;
         }
         return false;
+    }
+
+    // Cancelar un pago por transactionId
+    public boolean cancelPaymentByTransactionId(String transactionId) {
+        Optional<Payment> existingPayment = getPaymentByTransactionId(transactionId);
+
+        if (existingPayment.isPresent()) {
+            Payment payment = existingPayment.get();
+            payment.setStatus("CANCELED");
+            paymentRepository.save(payment); // Guardar el cambio en el repositorio
+            return true;
+        }
+        return false;
+    }
+
+    // Guardar múltiples pagos (por ejemplo, para batch processing)
+    public List<Payment> saveMultiplePayments(List<Payment> paymentsToSave) {
+        return paymentRepository.saveAll(paymentsToSave);
     }
 }

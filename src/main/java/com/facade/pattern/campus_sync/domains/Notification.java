@@ -14,7 +14,7 @@ public class Notification {
     private Long id;
     private String title;
     private String message;
-    private String type; // Ejemplo: "success", "error", "info", "warning"
+    private String type;
     private LocalDateTime timestamp;
     private boolean isRead;
 

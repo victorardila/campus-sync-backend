@@ -13,5 +13,5 @@ public interface InvoiceRepository {
 
     void deleteById(Long id); // Eliminar un curso por ID
 
-    List<Invoice> saveAll(List<Invoice> scholarship); // Guardar múltiples cursos
+    List<Invoice> saveAll(List<Invoice> invoice); // Guardar múltiples cursos
 }

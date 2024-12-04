@@ -53,9 +53,15 @@ public class EnrollmentFacade implements IEnrollmentFacade {
 
     @Override
     public boolean processPayment(Payment payment) {
-        return paymentService.processPayment(payment.getPaymentMethod(), payment.getAmount(), payment.getNumber(),
-                payment.getCvv(), payment.getExpirationDate()); // Llama al servicio para
-        // procesar el pago
+        Payment processedPayment = paymentService.processPayment(
+                payment.getPaymentMethod(),
+                payment.getAmount(),
+                payment.getNumber(),
+                payment.getCvv(),
+                payment.getExpirationDate());
+
+        // Devuelve true si el estado del pago es "COMPLETED"
+        return "COMPLETED".equals(processedPayment.getStatus());
     }
 
     @Override

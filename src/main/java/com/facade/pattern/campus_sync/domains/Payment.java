@@ -21,8 +21,6 @@ public class Payment {
     private String status;
     private String transactionId; // Agregamos el campo transactionId
 
-    // Getters y Setters para todos los campos
-
     public Long getId() {
         return id;
     }
