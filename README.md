@@ -18,7 +18,7 @@ Proyecto de pago de matricula financiera de una universidad
 
 ## Diagrama de componentes
 
-![Patron-Facade-Componentes](https://github.com/user-attachments/assets/dcdb516f-9c91-45b1-b90d-f3878d5aedfc)
+![Diagrama de componentes](https://github.com/user-attachments/assets/07410fc3-92ba-42f7-9462-c81c7af0c4cf)
 
 ## Configuracion de la base de datos
 
