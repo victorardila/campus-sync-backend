@@ -47,14 +47,15 @@ public class EnrollmentFacade implements IEnrollmentFacade {
     @Override
     public Invoice generateInvoice(Student student, List<Course> courses, Scholarship scholarship) {
         double totalAmount = calculateTotalAmount(courses, scholarship);
-        return invoiceService.createInvoice(student, courses, scholarship, totalAmount); // Llama al servicio para //
-                                                                                         // generar la factura
+        return invoiceService.createInvoice(student, courses, scholarship, totalAmount); // Ahora pasa los parámetros
+                                                                                         // correctos
     }
 
     @Override
     public boolean processPayment(Payment payment) {
-        return paymentService.processPayment(payment.getPaymentMethod(), payment.getAmount(), payment.getNumber(), payment.getCvv(), payment.getExpirationDate()); // Llama al servicio para
-                                                                                             // procesar el pago
+        return paymentService.processPayment(payment.getPaymentMethod(), payment.getAmount(), payment.getNumber(),
+                payment.getCvv(), payment.getExpirationDate()); // Llama al servicio para
+        // procesar el pago
     }
 
     @Override

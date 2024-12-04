@@ -1,73 +1,74 @@
 package com.facade.pattern.campus_sync.services.billing;
 
-import com.facade.pattern.campus_sync.domains.Invoice;
 import com.facade.pattern.campus_sync.domains.Course;
+import com.facade.pattern.campus_sync.domains.Invoice;
 import com.facade.pattern.campus_sync.domains.Scholarship;
 import com.facade.pattern.campus_sync.domains.Student;
+import com.facade.pattern.campus_sync.repositories.InvoiceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class InvoiceService {
 
-    // Utilizamos una lista en memoria para almacenar las facturas
-    private List<Invoice> invoiceList = new ArrayList<>();
-    private Long currentId = 1L; // ID para las facturas, se incrementa para cada nueva factura
+    private final InvoiceRepository invoiceRepository;
 
-    // Método para crear una nueva factura
-    public Invoice createInvoice(Student student, List<Course> cursosSeleccionados, Scholarship scholarship,
-            double totalAmount) {
+    @Autowired
+    public InvoiceService(InvoiceRepository invoiceRepository) {
+        this.invoiceRepository = invoiceRepository;
+    }
+
+    // Crear una nueva factura
+    public Invoice createInvoice(Student student, List<Course> courses, Scholarship scholarship, double totalAmount) {
+        // Crear un objeto Invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceDate(LocalDateTime.now());
-        invoice.setCursosSeleccionados(cursosSeleccionados);
-        invoice.setDiscount(scholarship != null ? scholarship.getDiscount() : 0); // Si hay beca, aplica descuento
-        invoice.setAmount(totalAmount);
-        invoice.setId(currentId++); // Asignar un ID único a la factura
+        invoice.setStudent(student); // Asignar el estudiante
+        invoice.setCursosSeleccionados(courses); // Asignar los cursos seleccionados
+        invoice.setDiscount(scholarship != null ? scholarship.getDiscount() : 0); // Asignar el descuento si hay beca
+        invoice.setAmount(totalAmount); // Asignar el monto total
 
-        // Guardamos la factura en memoria
-        invoiceList.add(invoice);
-        return invoice;
+        return invoiceRepository.save(invoice); // Guardar y devolver la factura
     }
 
-    // Método para obtener una factura por ID
-    public Optional<Invoice> getInvoiceById(Long id) {
-        // Buscamos la factura en la lista por ID
-        return invoiceList.stream().filter(invoice -> invoice.getId().equals(id)).findFirst();
-    }
-
-    // Método para obtener todas las facturas
+    // Obtener todas las facturas
     public List<Invoice> getAllInvoices() {
-        return new ArrayList<>(invoiceList); // Retornamos una copia de la lista de facturas
+        return invoiceRepository.findAll();
     }
 
-    // Método para actualizar una factura existente
-    public Invoice updateInvoice(Long id, Invoice updatedInvoice) {
-        // Buscamos la factura por ID
+    // Obtener una factura por ID
+    public Optional<Invoice> getInvoiceById(Long id) {
+        return Optional.ofNullable(invoiceRepository.findById(id));
+    }
+
+    // Actualizar una factura existente
+    public boolean updateInvoice(Long id, Student student, List<Course> courses, Scholarship scholarship,
+            double totalAmount) {
         Optional<Invoice> existingInvoice = getInvoiceById(id);
         if (existingInvoice.isPresent()) {
             Invoice invoice = existingInvoice.get();
-            invoice.setInvoiceDate(updatedInvoice.getInvoiceDate());
-            invoice.setCursosSeleccionados(updatedInvoice.getCursosSeleccionados());
-            invoice.setDiscount(updatedInvoice.getDiscount());
-            invoice.setAmount(updatedInvoice.getAmount());
+            invoice.setStudent(student);
+            invoice.setCursosSeleccionados(courses);
+            invoice.setDiscount(scholarship != null ? scholarship.getDiscount() : 0);
+            invoice.setAmount(totalAmount);
 
-            // Actualizamos la factura en memoria
-            return invoice;
+            invoiceRepository.save(invoice);
+            return true; // Retornar true si la actualización fue exitosa
         }
-        return null; // Si no se encuentra la factura, retornamos null
+        return false; // Si la factura no existe, retornar false
     }
 
-    // Método para eliminar una factura por ID
+    // Eliminar una factura por ID
     public boolean deleteInvoice(Long id) {
         Optional<Invoice> invoiceToDelete = getInvoiceById(id);
         if (invoiceToDelete.isPresent()) {
-            invoiceList.remove(invoiceToDelete.get()); // Eliminamos la factura de la lista en memoria
+            invoiceRepository.deleteById(id); // Eliminamos la factura del repositorio
             return true;
         }
-        return false; // Si no se encuentra la factura, no se elimina
+        return false; // Si no se encuentra la factura, no la eliminamos
     }
 }

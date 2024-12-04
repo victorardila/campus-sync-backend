@@ -13,12 +13,13 @@ public class Invoice {
     private int discount;
     private double amount;
 
-    @ManyToMany // Cambia esto según la relación que deseas
-    @JoinTable(name = "invoice_courses", // Nombre de la tabla intermedia
-            joinColumns = @JoinColumn(name = "invoice_id"), // Columna que referencia a Invoice
-            inverseJoinColumns = @JoinColumn(name = "course_id") // Columna que referencia a Course
-    )
+    @ManyToMany
+    @JoinTable(name = "invoice_courses", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> cursosSeleccionados;
+
+    @ManyToOne // Establecemos la relación con el estudiante
+    @JoinColumn(name = "student_id") // Define la columna que hace referencia al Student
+    private Student student; // Este es el campo que faltaba
 
     // Getters y setters
 
@@ -60,5 +61,13 @@ public class Invoice {
 
     public void setCursosSeleccionados(List<Course> cursosSeleccionados) {
         this.cursosSeleccionados = cursosSeleccionados;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }
