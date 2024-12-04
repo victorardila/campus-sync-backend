@@ -1,6 +1,5 @@
 package com.facade.pattern.campus_sync.config;
 
-import com.facade.pattern.campus_sync.repositories.database.JpaStudentRepository;
 import com.facade.pattern.campus_sync.repositories.memory.InMemoryStudentRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +15,10 @@ public class AppConfig {
         return new InMemoryStudentRepository();
     }
 
-    // No es necesario definir JpaStudentRepository aquí, ya que Spring Data JPA lo
-    // hace automáticamente
+    // Configuración para usar el repositorio en base de datos
+    // @Bean
+    // @Profile("database")
+    // public JpaStudentRepository jpaStudentRepository() {
+    // return new JpaStudentRepository();
+    // }
 }

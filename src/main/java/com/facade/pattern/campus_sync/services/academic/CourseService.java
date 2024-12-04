@@ -1,43 +1,50 @@
 package com.facade.pattern.campus_sync.services.academic;
 
 import com.facade.pattern.campus_sync.domains.Course;
+import com.facade.pattern.campus_sync.repositories.CourseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CourseService {
 
-    private List<Course> courses = new ArrayList<>();
+    private final CourseRepository courseRepository;
 
-    // Obtener todos los cursos (en memoria)
+    @Autowired
+    public CourseService(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
+
+    // Obtener todos los cursos
     public List<Course> getAllCourses() {
-        return courses;
+        return courseRepository.findAll();
     }
 
-    // Obtener un curso por su ID (en memoria)
+    // Obtener un curso por su ID
     public Optional<Course> getCourseById(Long id) {
-        return courses.stream().filter(course -> course.getId().equals(id)).findFirst();
+        return Optional.ofNullable(courseRepository.findById(id));
     }
 
-    // Obtener un curso por su código (en memoria)
+    // Obtener un curso por su código
     public Optional<Course> getCourseByCode(String code) {
-        return courses.stream().filter(course -> course.getCode().equals(code)).findFirst();
+        return courseRepository.findAll().stream()
+                .filter(course -> course.getCode().equals(code))
+                .findFirst();
     }
 
-    // Guardar un nuevo curso (en memoria)
+    // Guardar un nuevo curso
     public Course saveCourse(Course course) {
-        courses.add(course);
-        return course;
+        return courseRepository.save(course);
     }
 
-    // Actualizar un curso existente (en memoria)
-    public Course updateCourse(String code, Course courseDetails) {
-        Optional<Course> courseOptional = getCourseByCode(code);
-        if (courseOptional.isPresent()) {
-            Course course = courseOptional.get();
+    // Actualizar un curso existente
+    public boolean updateCourse(Long id, Course courseDetails) {
+        Optional<Course> existingCourse = getCourseById(id);
+        if (existingCourse.isPresent()) {
+            Course course = existingCourse.get();
             course.setCode(courseDetails.getCode());
             course.setName(courseDetails.getName());
             course.setCredits(courseDetails.getCredits());
@@ -45,21 +52,24 @@ public class CourseService {
             course.setCurrentQuantity(courseDetails.getCurrentQuantity());
             course.setMaximumLimit(courseDetails.getMaximumLimit());
             course.setSchedule(courseDetails.getSchedule());
-            return course;
-        } else {
-            return null; // Si el curso no se encuentra, devuelve null o lanza una excepción
-                         // personalizada
+            courseRepository.save(course); // Guardamos los cambios en el repositorio
+            return true;
         }
+        return false;
     }
 
-    // Eliminar un curso por su ID (en memoria)
-    public void deleteCourse(String code) {
-        courses.removeIf(course -> course.getCode().equals(code));
+    // Eliminar un curso por su ID
+    public boolean deleteCourse(Long id) {
+        Optional<Course> existingCourse = getCourseById(id);
+        if (existingCourse.isPresent()) {
+            courseRepository.deleteById(id); // Eliminar del repositorio
+            return true;
+        }
+        return false;
     }
 
-    // Guardar múltiples cursos (en memoria)
+    // Guardar múltiples cursos
     public List<Course> saveMultipleCourses(List<Course> coursesToSave) {
-        courses.addAll(coursesToSave);
-        return coursesToSave;
+        return courseRepository.saveAll(coursesToSave);
     }
 }

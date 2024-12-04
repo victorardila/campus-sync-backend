@@ -1,6 +1,14 @@
 package com.facade.pattern.campus_sync.domains;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Ahora se asignará manualmente en el repositorio en memoria.
     private String code;
     private String name;
