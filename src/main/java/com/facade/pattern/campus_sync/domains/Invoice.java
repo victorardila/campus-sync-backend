@@ -14,7 +14,7 @@ public class Invoice {
     private double amount;
 
     @ManyToMany
-    @JoinTable(name = "invoice_courses", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @JoinTable(name = "invoice", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> cursosSeleccionados;
 
     @ManyToOne // Establecemos la relación con el estudiante
