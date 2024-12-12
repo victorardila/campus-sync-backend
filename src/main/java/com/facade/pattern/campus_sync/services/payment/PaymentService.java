@@ -50,7 +50,7 @@ public class PaymentService {
 
     // Obtener un pago por ID
     public Optional<Payment> getPaymentById(Long id) {
-        return Optional.ofNullable(paymentRepository.findById(id));
+        return paymentRepository.findById(id);
     }
 
     // Obtener un pago por transactionId
@@ -82,10 +82,5 @@ public class PaymentService {
             return true;
         }
         return false;
-    }
-
-    // Guardar múltiples pagos (por ejemplo, para batch processing)
-    public List<Payment> saveMultiplePayments(List<Payment> paymentsToSave) {
-        return paymentRepository.saveAll(paymentsToSave);
     }
 }

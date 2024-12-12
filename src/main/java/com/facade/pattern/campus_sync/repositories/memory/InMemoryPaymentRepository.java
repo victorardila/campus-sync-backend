@@ -2,15 +2,12 @@ package com.facade.pattern.campus_sync.repositories.memory;
 
 import com.facade.pattern.campus_sync.domains.Payment;
 import com.facade.pattern.campus_sync.repositories.PaymentRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class InMemoryPaymentRepository implements PaymentRepository {
 
     private final ConcurrentHashMap<Long, Payment> payments = new ConcurrentHashMap<>();
@@ -31,8 +28,8 @@ public class InMemoryPaymentRepository implements PaymentRepository {
     }
 
     @Override
-    public Payment findById(Long id) {
-        return payments.get(id);
+    public Optional<Payment> findById(Long id) {
+        return Optional.ofNullable(payments.get(id));
     }
 
     @Override
@@ -46,13 +43,5 @@ public class InMemoryPaymentRepository implements PaymentRepository {
     @Override
     public void deleteById(Long id) {
         payments.remove(id);
-    }
-
-    @Override
-    public List<Payment> saveAll(List<Payment> paymentsToSave) {
-        for (Payment payment : paymentsToSave) {
-            save(payment);
-        }
-        return paymentsToSave;
     }
 }

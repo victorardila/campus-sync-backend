@@ -10,11 +10,9 @@ public interface PaymentRepository {
 
     List<Payment> findAll(); // Obtener todos los cursos
 
-    Payment findById(Long id); // Buscar un curso por ID
+    Optional<Payment> findById(Long id); // Buscar un curso por ID
 
     Optional<Payment> findByTransactionId(String id);
 
     void deleteById(Long id); // Eliminar un curso por ID
-
-    List<Payment> saveAll(List<Payment> payment); // Guardar múltiples cursos
 }

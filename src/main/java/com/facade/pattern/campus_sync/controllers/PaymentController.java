@@ -82,8 +82,15 @@ public class PaymentController {
 
     // Guardar múltiples pagos (batch processing)
     @PostMapping("/batch/save")
-    public ResponseEntity<List<Payment>> saveMultiplePayments(@RequestBody List<Payment> payments) {
-        List<Payment> savedPayments = paymentService.saveMultiplePayments(payments);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPayments); // 201 CREATED
+    public ResponseEntity<String> saveMultiplePayments(@RequestBody List<Payment> payments) {
+        for (Payment payment : payments) {
+            paymentService.processPayment(
+                    payment.getPaymentMethod(),
+                    payment.getAmount(),
+                    payment.getNumber(),
+                    payment.getCvv(),
+                    payment.getExpirationDate());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Pagos guardados exitosamente."); // 201 CREATED
     }
 }
