@@ -26,16 +26,16 @@ public class ScholarshipService {
 
     // Obtener una beca por su ID
     public Optional<Scholarship> getScholarshipById(Long id) {
-        return Optional.ofNullable(scholarshipRepository.findById(id));
+        return scholarshipRepository.findById(id);
     }
 
     // Guardar una nueva beca
-    public Scholarship saveCourse(Scholarship scholarship) {
+    public Scholarship saveScholarship(Scholarship scholarship) {
         return scholarshipRepository.save(scholarship);
     }
 
     // Actualizar una beca existente
-    public boolean updateCourse(Long id, Scholarship scholarshipDetails) {
+    public boolean updateScholarship(Long id, Scholarship scholarshipDetails) {
         Optional<Scholarship> existingSholarship = getScholarshipById(id);
         if (existingSholarship.isPresent()) {
             Scholarship scholarship = existingSholarship.get();
@@ -56,10 +56,5 @@ public class ScholarshipService {
             return true;
         }
         return false;
-    }
-
-    // Guardar múltiples cursos
-    public List<Scholarship> saveMultipleCourses(List<Scholarship> scholarshipToSave) {
-        return scholarshipRepository.saveAll(scholarshipToSave);
     }
 }

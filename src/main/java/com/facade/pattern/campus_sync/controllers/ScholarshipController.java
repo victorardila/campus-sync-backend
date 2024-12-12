@@ -2,7 +2,7 @@ package com.facade.pattern.campus_sync.controllers;
 
 import com.facade.pattern.campus_sync.domains.Scholarship;
 import com.facade.pattern.campus_sync.services.academic.ScholarshipService;
-import com.facade.pattern.campus_sync.exception.ResourceNotFoundException; // Clase para manejar excepciones personalizadas
+import com.facade.pattern.campus_sync.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,14 +40,16 @@ public class ScholarshipController {
     // Crear una nueva beca
     @PostMapping("/add")
     public ResponseEntity<String> saveScholarship(@RequestBody Scholarship scholarship) {
-        scholarshipService.saveCourse(scholarship); // Guardar la beca
+        scholarshipService.saveScholarship(scholarship); // Guardar la beca
         return ResponseEntity.status(HttpStatus.CREATED).body("Beca creada exitosamente."); // Devuelve 201 CREATED
     }
 
     // Crear varias becas
     @PostMapping("/addMultiple")
     public ResponseEntity<String> saveMultipleScholarships(@RequestBody List<Scholarship> scholarships) {
-        scholarshipService.saveMultipleCourses(scholarships); // Guardar las becas
+        for (Scholarship scholarship : scholarships) {
+            scholarshipService.saveScholarship(scholarship); // Guardar cada beca individualmente
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body("Becas creadas exitosamente."); // Devuelve 201 CREATED
     }
 
@@ -55,7 +57,7 @@ public class ScholarshipController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateScholarship(@PathVariable Long id,
             @RequestBody Scholarship scholarshipDetails) {
-        boolean updated = scholarshipService.updateCourse(id, scholarshipDetails);
+        boolean updated = scholarshipService.updateScholarship(id, scholarshipDetails);
         if (updated) {
             return ResponseEntity.ok("Beca actualizada exitosamente."); // Devuelve 200 OK
         } else {

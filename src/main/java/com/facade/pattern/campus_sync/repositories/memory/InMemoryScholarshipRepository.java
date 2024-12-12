@@ -2,14 +2,12 @@ package com.facade.pattern.campus_sync.repositories.memory;
 
 import com.facade.pattern.campus_sync.domains.Scholarship;
 import com.facade.pattern.campus_sync.repositories.ScholarshipRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@Repository
 public class InMemoryScholarshipRepository implements ScholarshipRepository {
     private Map<Long, Scholarship> scholarshipMap = new HashMap<>();
     private long currentId = 1;
@@ -24,16 +22,8 @@ public class InMemoryScholarshipRepository implements ScholarshipRepository {
     }
 
     @Override
-    public List<Scholarship> saveAll(List<Scholarship> scholarships) {
-        for (Scholarship scholarship : scholarships) {
-            save(scholarship);
-        }
-        return scholarships;
-    }
-
-    @Override
-    public Scholarship findById(Long id) {
-        return scholarshipMap.get(id);
+    public Optional<Scholarship> findById(Long id) {
+        return Optional.ofNullable(scholarshipMap.get(id));
     }
 
     @Override
