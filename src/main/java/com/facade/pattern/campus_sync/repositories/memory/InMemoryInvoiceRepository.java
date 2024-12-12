@@ -2,14 +2,13 @@ package com.facade.pattern.campus_sync.repositories.memory;
 
 import com.facade.pattern.campus_sync.domains.Invoice;
 import com.facade.pattern.campus_sync.repositories.InvoiceRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@Repository
 public class InMemoryInvoiceRepository implements InvoiceRepository {
 
     private Map<Long, Invoice> invoiceMap = new HashMap<>();
@@ -30,20 +29,12 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
     }
 
     @Override
-    public Invoice findById(Long id) {
-        return invoiceMap.get(id);
+    public Optional<Invoice> findById(Long id) {
+        return Optional.ofNullable(invoiceMap.get(id));
     }
 
     @Override
     public void deleteById(Long id) {
         invoiceMap.remove(id);
-    }
-
-    @Override
-    public List<Invoice> saveAll(List<Invoice> invoices) {
-        for (Invoice invoice : invoices) {
-            save(invoice);
-        }
-        return invoices;
     }
 }

@@ -42,7 +42,7 @@ public class InvoiceService {
 
     // Obtener una factura por ID
     public Optional<Invoice> getInvoiceById(Long id) {
-        return Optional.ofNullable(invoiceRepository.findById(id));
+        return invoiceRepository.findById(id);
     }
 
     // Actualizar una factura existente
