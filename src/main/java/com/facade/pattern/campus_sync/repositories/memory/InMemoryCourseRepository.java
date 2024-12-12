@@ -2,57 +2,42 @@ package com.facade.pattern.campus_sync.repositories.memory;
 
 import com.facade.pattern.campus_sync.domains.Course;
 import com.facade.pattern.campus_sync.repositories.CourseRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-@Repository
 public class InMemoryCourseRepository implements CourseRepository {
-    private Map<Long, Course> courseMap = new HashMap<>();
-    private long currentId = 1;
+    private final List<Course> courses = new ArrayList<>();
 
     @Override
     public Course save(Course course) {
-        if (course.getId() == null) {
-            course.setId(currentId++);
-        }
-        courseMap.put(course.getId(), course);
+        courses.removeIf(c -> c.getId().equals(course.getId())); // Elimina el curso existente si lo hay
+        courses.add(course);
         return course;
     }
 
     @Override
-    public List<Course> saveAll(List<Course> courses) {
-        for (Course course : courses) {
-            save(course);
-        }
-        return courses;
-    }
-
-    @Override
-    public Course findById(Long id) {
-        return courseMap.get(id);
+    public Optional<Course> findById(Long id) {
+        return courses.stream()
+                .filter(course -> course.getId().equals(id))
+                .findFirst(); // Cambia a Optional
     }
 
     @Override
     public void deleteById(Long id) {
-        courseMap.remove(id);
+        courses.removeIf(course -> course.getId().equals(id));
     }
 
     @Override
     public List<Course> findAll() {
-        return new ArrayList<>(courseMap.values());
+        return new ArrayList<>(courses);
     }
 
     @Override
     public Course findByCode(String code) {
-        for (Course course : courseMap.values()) {
-            if (course.getCode().equals(code)) {
-                return course;
-            }
-        }
-        return null; // Devuelve null si no encuentra el curso
+        return courses.stream()
+                .filter(course -> course.getCode().equals(code))
+                .findFirst()
+                .orElse(null);
     }
 }

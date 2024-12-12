@@ -31,7 +31,7 @@ public class StudentController {
 
     // Obtener un estudiante por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable String id) {
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         return studentService.getStudentById(id)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResourceNotFoundException("Estudiante no encontrado con ID: " + id));
@@ -54,23 +54,23 @@ public class StudentController {
     }
 
     // Actualizar un estudiante
-    @PutMapping("/update/{id}") // Corrige la ruta de "upadte" a "update"
-    public ResponseEntity<String> updateStudent(@PathVariable String id, @RequestBody Student updatedStudent) {
-        boolean updated = studentService.updateStudent(id, updatedStudent);
-        if (updated) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateStudent(@PathVariable Long id, @RequestBody Student updatedStudent) {
+        Student updated = studentService.updateStudent(id, updatedStudent);
+        if (updated != null) {
             return ResponseEntity.ok("Estudiante actualizado con éxito.");
         } else {
-            throw new ResourceNotFoundException("Estudiante no encontrado con ID: " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estudiante no encontrado con ID: " + id);
         }
     }
 
     // Eliminar un estudiante
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteStudent(@PathVariable String id) {
-        boolean deleted = studentService.deleteStudent(id);
-        if (deleted) {
+    public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
+        try {
+            studentService.deleteStudent(id); // Cambiado a void, no necesita capturar booleano
             return ResponseEntity.ok("Estudiante eliminado con éxito.");
-        } else {
+        } catch (ResourceNotFoundException e) {
             throw new ResourceNotFoundException("Estudiante no encontrado con ID: " + id);
         }
     }
@@ -92,5 +92,4 @@ public class StudentController {
                                                                                        // el mensaje de error
         }
     }
-
 }

@@ -10,8 +10,6 @@ import java.util.Optional;
 
 @Service
 public class StudentService {
-
-    // Repositorio de estudiantes (puede ser en memoria o JPA, según el perfil)
     private final StudentRepository studentRepository;
 
     @Autowired
@@ -19,49 +17,35 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    // Obtener todos los estudiantes
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
-    // Obtener un estudiante por ID
-    public Optional<Student> getStudentById(String id) {
-        return Optional.ofNullable(studentRepository.findById(id));
+    public Optional<Student> getStudentById(Long id) {
+        return studentRepository.findById(id);
     }
 
-    // Añadir un nuevo estudiante
     public void addStudent(Student student) {
         studentRepository.save(student);
     }
 
-    // Actualizar estudiante
-    public boolean updateStudent(String id, Student updatedStudent) {
-        Optional<Student> existingStudent = getStudentById(id);
+    public Student updateStudent(Long id, Student updatedStudent) {
+        Optional<Student> existingStudent = studentRepository.findById(id);
         if (existingStudent.isPresent()) {
             Student student = existingStudent.get();
+            // Actualiza los campos necesarios
             student.setName(updatedStudent.getName());
             student.setAcademicProgram(updatedStudent.getAcademicProgram());
-            student.setTipoDescuento(updatedStudent.getTipoDescuento());
-            student.setSaldoPagar(updatedStudent.getSaldoPagar());
-            student.setCreditosAcumulados(updatedStudent.getCreditosAcumulados());
-            student.setMoney(updatedStudent.getMoney());
-            studentRepository.save(student); // Guardamos los cambios en el repositorio
-            return true;
+            // Guarda los cambios
+            return studentRepository.save(student); // Devuelve el estudiante actualizado
         }
-        return false;
+        return null; // O lanza una excepción si no se encuentra
     }
 
-    // Eliminar estudiante
-    public boolean deleteStudent(String id) {
-        Optional<Student> existingStudent = getStudentById(id);
-        if (existingStudent.isPresent()) {
-            studentRepository.deleteById(id); // Eliminar del repositorio
-            return true;
-        }
-        return false;
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id); // Llama al nuevo método
     }
 
-    // Método para autenticar a un estudiante
     public Optional<Student> authenticate(String username, String password) {
         return studentRepository.findAll().stream()
                 .filter(student -> student.getUsername().equals(username) && student.getPassword().equals(password))

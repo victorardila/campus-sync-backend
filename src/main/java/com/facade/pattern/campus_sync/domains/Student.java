@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     private String name;
     private String academicProgram;
     private String tipoDescuento; // "beca", "votaciones", "descendencia"
@@ -22,7 +22,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(String id, String name, String academicProgram, String tipoDescuento, double saldoPagar,
+    public Student(Long id, String name, String academicProgram, String tipoDescuento, double saldoPagar,
             int creditosAcumulados, String username, String password, double money) {
         this.id = id;
         this.name = name;
@@ -35,11 +35,11 @@ public class Student {
         this.money = money;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -106,5 +106,4 @@ public class Student {
     public void setMoney(double money) {
         this.money = money;
     }
-
 }

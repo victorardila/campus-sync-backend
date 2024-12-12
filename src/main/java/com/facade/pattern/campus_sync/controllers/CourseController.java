@@ -47,7 +47,9 @@ public class CourseController {
     // Agregar varios cursos
     @PostMapping("/addMultiple")
     public ResponseEntity<String> saveMultipleCourses(@RequestBody List<Course> courses) {
-        courseService.saveMultipleCourses(courses); // Guardar los cursos
+        for (Course course : courses) {
+            courseService.saveCourse(course); // Guardar cada curso individualmente
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body("Cursos guardados exitosamente."); // Devuelve 201 CREATED
     }
 
@@ -58,7 +60,7 @@ public class CourseController {
         if (updated) {
             return ResponseEntity.ok("Curso actualizado exitosamente."); // Devuelve 200 OK
         } else {
-            throw new ResourceNotFoundException("Curso no encontrado con código: " + id);
+            throw new ResourceNotFoundException("Curso no encontrado con ID: " + id);
         }
     }
 
@@ -69,7 +71,7 @@ public class CourseController {
         if (deleted) {
             return ResponseEntity.ok("Curso eliminado exitosamente."); // Devuelve 200 OK
         } else {
-            throw new ResourceNotFoundException("Curso no encontrado con código: " + id);
+            throw new ResourceNotFoundException("Curso no encontrado con ID: " + id);
         }
     }
 }

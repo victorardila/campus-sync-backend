@@ -25,7 +25,7 @@ public class CourseService {
 
     // Obtener un curso por su ID
     public Optional<Course> getCourseById(Long id) {
-        return Optional.ofNullable(courseRepository.findById(id));
+        return courseRepository.findById(id);
     }
 
     // Obtener un curso por su código
@@ -66,10 +66,5 @@ public class CourseService {
             return true;
         }
         return false;
-    }
-
-    // Guardar múltiples cursos
-    public List<Course> saveMultipleCourses(List<Course> coursesToSave) {
-        return courseRepository.saveAll(coursesToSave);
     }
 }
