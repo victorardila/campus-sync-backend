@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/scholarships")
+@RequestMapping("/api/scholarship")
 public class ScholarshipController {
 
     private final ScholarshipService scholarshipService;

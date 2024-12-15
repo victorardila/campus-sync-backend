@@ -13,8 +13,8 @@ public class Invoice {
     private int discount;
     private double amount;
 
-    @ManyToMany
-    @JoinTable(name = "invoice", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @ManyToMany(cascade = CascadeType.ALL) // Asegúrate de que la relación sea correcta
+    @JoinTable(name = "invoice_courses", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> cursosSeleccionados;
 
     @ManyToOne // Establecemos la relación con el estudiante

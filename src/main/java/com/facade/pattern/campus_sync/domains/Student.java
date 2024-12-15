@@ -106,4 +106,12 @@ public class Student {
     public void setMoney(double money) {
         this.money = money;
     }
+
+    @Override
+    public String toString() {
+        return "Student [academicProgram=" + academicProgram + ", creditosAcumulados=" + creditosAcumulados + ", id="
+                + id
+                + ", money=" + money + ", name=" + name + ", password=" + password + ", saldoPagar=" + saldoPagar
+                + ", tipoDescuento=" + tipoDescuento + ", username=" + username + "]";
+    }
 }

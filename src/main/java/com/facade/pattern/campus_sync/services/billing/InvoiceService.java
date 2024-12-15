@@ -32,7 +32,8 @@ public class InvoiceService {
         invoice.setDiscount(scholarship != null ? scholarship.getDiscount() : 0); // Asignar el descuento si hay beca
         invoice.setAmount(totalAmount); // Asignar el monto total
 
-        return invoiceRepository.save(invoice); // Guardar y devolver la factura
+        // Guardar y devolver la factura
+        return invoiceRepository.save(invoice);
     }
 
     // Obtener todas las facturas

@@ -15,7 +15,7 @@ public class Course {
     private int credits;
     private String teacher;
     private int currentQuantity;
-    private int maximumLimit;
+    private int maxQuantity;
     private String schedule;
 
     // Constructores
@@ -30,7 +30,7 @@ public class Course {
         this.credits = credits;
         this.teacher = teacher;
         this.currentQuantity = currentQuantity;
-        this.maximumLimit = maximumLimit;
+        this.maxQuantity = maximumLimit;
         this.schedule = schedule;
     }
 
@@ -85,11 +85,11 @@ public class Course {
     }
 
     public int getMaximumLimit() {
-        return maximumLimit;
+        return maxQuantity;
     }
 
     public void setMaximumLimit(int maximumLimit) {
-        this.maximumLimit = maximumLimit;
+        this.maxQuantity = maximumLimit;
     }
 
     public String getSchedule() {
@@ -98,5 +98,13 @@ public class Course {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
+    }
+
+    @Override
+    public String toString() {
+        return "Course [code=" + code + ", credits=" + credits + ", currentQuantity=" + currentQuantity + ", id=" + id
+                + ", maximumLimit=" + maxQuantity + ", name=" + name + ", schedule=" + schedule + ", teacher="
+                + teacher
+                + "]";
     }
 }

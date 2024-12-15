@@ -61,4 +61,10 @@ public class Scholarship {
     public void setDiscount(int discount) {
         this.discount = discount;
     }
+
+    @Override
+    public String toString() {
+        return "Scholarship [description=" + description + ", discount=" + discount + ", id=" + id + ", name=" + name
+                + ", requirements=" + requirements + "]";
+    }
 }

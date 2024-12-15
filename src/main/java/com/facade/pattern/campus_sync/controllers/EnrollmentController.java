@@ -46,7 +46,12 @@ public class EnrollmentController {
             Student student = invoiceRequestDTO.getStudent();
             List<Course> courses = invoiceRequestDTO.getCourses();
             Scholarship scholarship = invoiceRequestDTO.getScholarship();
+            // Impresión de los datos recibidos
+            System.out.println("Student: " + student);
+            System.out.println("Courses: " + courses);
+            System.out.println("Scholarship: " + scholarship);
             Invoice invoice = enrollmentFacade.generateInvoice(student, courses, scholarship);
+            System.out.println("Invoice generated: " + invoice);
             return ResponseEntity.status(HttpStatus.CREATED).body(invoice); // Retorna 201 Created con la factura
                                                                             // generada
         } catch (Exception e) {

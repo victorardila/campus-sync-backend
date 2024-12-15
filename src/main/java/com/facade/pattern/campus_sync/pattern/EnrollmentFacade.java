@@ -47,6 +47,7 @@ public class EnrollmentFacade implements IEnrollmentFacade {
     @Override
     public Invoice generateInvoice(Student student, List<Course> courses, Scholarship scholarship) {
         double totalAmount = calculateTotalAmount(courses, scholarship);
+        System.out.println("Total amount: " + totalAmount);
         return invoiceService.createInvoice(student, courses, scholarship, totalAmount); // Ahora pasa los parámetros
                                                                                          // correctos
     }

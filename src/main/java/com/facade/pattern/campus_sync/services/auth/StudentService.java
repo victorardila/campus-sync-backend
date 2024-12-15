@@ -25,6 +25,17 @@ public class StudentService {
         return studentRepository.findById(id);
     }
 
+    public Optional<Student> getStudentByUsername(String username) {
+        return studentRepository.findAll().stream()
+                .filter(student -> student.getUsername().equals(username))
+                .findFirst();
+    }
+
+    // buscar por id
+    public Optional<Student> findById(Long id) {
+        return studentRepository.findById(id);
+    }
+
     public void addStudent(Student student) {
         studentRepository.save(student);
     }
