@@ -107,6 +107,10 @@ public class Student {
         this.money = money;
     }
 
+    public void deductMoney(double amount) {
+        this.money -= amount; // Resta el monto
+    }
+
     @Override
     public String toString() {
         return "Student [academicProgram=" + academicProgram + ", creditosAcumulados=" + creditosAcumulados + ", id="

@@ -16,7 +16,7 @@ public interface IEnrollmentFacade {
     Invoice generateInvoice(Student student, List<Course> courses, Scholarship scholarship); // Paso 3: Generación de
                                                                                              // factura
 
-    boolean processPayment(Payment paymentMethod); // Paso 4: Proceso de pago
+    boolean processPayment(Payment payment, Long studentId);
 
     String confirmEnrollment(); // Paso 5: Confirmación de matrícula
 }

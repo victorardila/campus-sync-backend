@@ -1,7 +1,10 @@
 package com.facade.pattern.campus_sync.services.payment;
 
 import com.facade.pattern.campus_sync.domains.Payment;
+import com.facade.pattern.campus_sync.domains.Student;
 import com.facade.pattern.campus_sync.repositories.PaymentRepository;
+import com.facade.pattern.campus_sync.services.auth.StudentService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,34 +16,44 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private StudentService studentService; // Asegúrate de tener un servicio para manejar
 
     @Autowired
-    public PaymentService(PaymentRepository paymentRepository) {
+    public PaymentService(PaymentRepository paymentRepository, StudentService studentService) {
         this.paymentRepository = paymentRepository;
+        this.studentService = studentService; // Inicializa el StudentService
     }
 
-    // Procesar un pago
     public Payment processPayment(String paymentMethod, double amount, String number, int cvv,
-            LocalDateTime expirationDate) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("El monto debe ser mayor a 0.");
+            LocalDateTime expirationDate,
+            Long studentId) {
+        // Obtén el estudiante por su ID
+        Student student = studentService.getStudentById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        // Verifica si el estudiante tiene suficiente dinero
+        if (student.getMoney() >= amount) {
+            // Deduce el dinero del estudiante
+            student.deductMoney(amount);
+            studentService.updateStudent(studentId, student); // Pasa el ID y el objeto actualizado
+
+            Payment payment = new Payment();
+            payment.setPaymentMethod(paymentMethod);
+            payment.setAmount(amount);
+            payment.setNumber(number);
+            payment.setCvv(cvv);
+            payment.setExpirationDate(expirationDate);
+            payment.setPaymentDate(LocalDateTime.now());
+            payment.setStatus("PENDING");
+            payment.setTransactionId(
+                    "TXN-" + LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)); // ID único
+            // Cambiar el estado a COMPLETED si es exitoso
+            payment.setStatus("COMPLETED");
+            paymentRepository.save(payment); // Guardar el objeto Payment en el repositorio
+            return payment; // Retorna el objeto Payment procesado
+        } else {
+            throw new IllegalArgumentException("Fondos insuficientes");
         }
-
-        Payment payment = new Payment();
-        payment.setPaymentMethod(paymentMethod);
-        payment.setAmount(amount);
-        payment.setNumber(number);
-        payment.setCvv(cvv);
-        payment.setExpirationDate(expirationDate);
-        payment.setPaymentDate(LocalDateTime.now());
-        payment.setStatus("PENDING");
-        payment.setTransactionId(
-                "TXN-" + LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)); // ID
-                                                                                       // único
-
-        // Cambiar el estado a COMPLETED si es exitoso
-        payment.setStatus("COMPLETED");
-        return paymentRepository.save(payment);
     }
 
     // Obtener todos los pagos

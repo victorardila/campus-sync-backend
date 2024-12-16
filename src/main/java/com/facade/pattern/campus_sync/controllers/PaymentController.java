@@ -24,13 +24,14 @@ public class PaymentController {
 
     // Procesar un pago
     @PostMapping("/process")
-    public ResponseEntity<Payment> processPayment(@RequestBody Payment payment) {
+    public ResponseEntity<Payment> processPayment(@RequestBody Payment payment, @RequestParam Long studentId) {
         Payment processedPayment = paymentService.processPayment(
                 payment.getPaymentMethod(),
                 payment.getAmount(),
                 payment.getNumber(),
                 payment.getCvv(),
-                payment.getExpirationDate());
+                payment.getExpirationDate(),
+                studentId); // Asegúrate de pasar el studentId
         return ResponseEntity.status(HttpStatus.CREATED).body(processedPayment); // 201 CREATED
     }
 
@@ -82,15 +83,18 @@ public class PaymentController {
 
     // Guardar múltiples pagos (batch processing)
     @PostMapping("/batch/save")
-    public ResponseEntity<String> saveMultiplePayments(@RequestBody List<Payment> payments) {
+    public ResponseEntity<String> saveMultiplePayments(@RequestBody List<Payment> payments,
+            @RequestParam Long studentId) {
         for (Payment payment : payments) {
             paymentService.processPayment(
                     payment.getPaymentMethod(),
                     payment.getAmount(),
                     payment.getNumber(),
                     payment.getCvv(),
-                    payment.getExpirationDate());
+                    payment.getExpirationDate(),
+                    studentId); // Asegúrate de pasar el studentId
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Pagos guardados exitosamente."); // 201 CREATED
     }
+
 }

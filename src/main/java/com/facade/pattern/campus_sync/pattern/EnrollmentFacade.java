@@ -21,6 +21,7 @@ public class EnrollmentFacade implements IEnrollmentFacade {
 
     @Autowired
     private CourseService courseService;
+    private double CREDIT_COST = 150000; // Define el costo por crédito
 
     @Autowired
     private ScholarshipService scholarshipService;
@@ -39,6 +40,10 @@ public class EnrollmentFacade implements IEnrollmentFacade {
         return courseService.getAllCourses(); // Llama al servicio para obtener los cursos
     }
 
+    public double getCreditCost() {
+        return CREDIT_COST;
+    }
+
     @Override
     public List<Scholarship> getAvailableScholarships() {
         return scholarshipService.getAllScholarships(); // Llama al servicio para obtener las becas
@@ -47,22 +52,22 @@ public class EnrollmentFacade implements IEnrollmentFacade {
     @Override
     public Invoice generateInvoice(Student student, List<Course> courses, Scholarship scholarship) {
         double totalAmount = calculateTotalAmount(courses, scholarship);
-        System.out.println("Total amount: " + totalAmount);
-        return invoiceService.createInvoice(student, courses, scholarship, totalAmount); // Ahora pasa los parámetros
-                                                                                         // correctos
+        return invoiceService.saveInvoice(student, courses, scholarship, totalAmount); // Ahora pasa los parámetros
+                                                                                       // correctos
     }
 
     @Override
-    public boolean processPayment(Payment payment) {
+    public boolean processPayment(Payment payment, Long studentId) {
         Payment processedPayment = paymentService.processPayment(
                 payment.getPaymentMethod(),
                 payment.getAmount(),
                 payment.getNumber(),
                 payment.getCvv(),
-                payment.getExpirationDate());
+                payment.getExpirationDate(),
+                studentId); // Asegúrate de pasar el studentId
 
-        // Devuelve true si el estado del pago es "COMPLETED"
-        return "COMPLETED".equals(processedPayment.getStatus());
+        // Devuelve true si el estado del pago es "COMPLETED", "Completed" o "complete"
+        return processedPayment.getStatus().equalsIgnoreCase("COMPLETED");
     }
 
     @Override
@@ -75,11 +80,16 @@ public class EnrollmentFacade implements IEnrollmentFacade {
     }
 
     private double calculateTotalAmount(List<Course> courses, Scholarship scholarship) {
-        double totalCredits = courses.stream().mapToDouble(Course::getCredits).sum();
-        double totalAmount = totalCredits * 100; // Supón que el costo por crédito es 100
+        double subtotal = courses.stream()
+                .mapToDouble(course -> course.getCredits() * CREDIT_COST)
+                .sum(); // Calcula el subtotal basado en los créditos de los cursos
+
+        double discount = 0.0;
         if (scholarship != null) {
-            totalAmount -= (totalAmount * scholarship.getDiscount() / 100);
+            discount = (scholarship.getDiscount() / 100.0) * subtotal; // Aplica el porcentaje de descuento
         }
-        return totalAmount;
+
+        double total = subtotal - discount; // Calcula el total después del descuento
+        return total;
     }
 }

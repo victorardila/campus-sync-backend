@@ -42,7 +42,7 @@ public class InvoiceController {
     @PostMapping("/add")
     public ResponseEntity<Invoice> createInvoice(@RequestBody InvoiceRequestDTO invoiceDTO) {
         // Lógica para crear factura utilizando los detalles de la solicitud
-        Invoice createdInvoice = invoiceService.createInvoice(invoiceDTO.getStudent(),
+        Invoice createdInvoice = invoiceService.saveInvoice(invoiceDTO.getStudent(),
                 invoiceDTO.getCourses(), invoiceDTO.getScholarship(), invoiceDTO.getAmount());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice); // Devuelve 201 CREATED
     }

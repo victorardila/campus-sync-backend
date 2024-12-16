@@ -3,6 +3,7 @@ package com.facade.pattern.campus_sync.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.facade.pattern.campus_sync.domains.Course;
@@ -40,18 +41,21 @@ public class EnrollmentController {
         return ResponseEntity.ok(scholarships); // Retorna 200 OK con la lista de becas
     }
 
-    @PostMapping("/generateInvoice")
-    public ResponseEntity<?> generateInvoice(@RequestBody InvoiceRequestDTO invoiceRequestDTO) {
+    @GetMapping("/credit-cost")
+    public ResponseEntity<Double> getCreditCost() {
+        // Accede al valor de CREDIT_COST desde EnrollmentFacade
+        double creditCost = enrollmentFacade.getCreditCost();
+        return ResponseEntity.ok(creditCost); // Retorna 200 OK con el costo del crédito
+    }
+
+    @PostMapping("/generate-invoice")
+    public ResponseEntity<?> generateInvoice(@Validated @RequestBody InvoiceRequestDTO invoiceRequestDTO) {
         try {
             Student student = invoiceRequestDTO.getStudent();
             List<Course> courses = invoiceRequestDTO.getCourses();
             Scholarship scholarship = invoiceRequestDTO.getScholarship();
             // Impresión de los datos recibidos
-            System.out.println("Student: " + student);
-            System.out.println("Courses: " + courses);
-            System.out.println("Scholarship: " + scholarship);
             Invoice invoice = enrollmentFacade.generateInvoice(student, courses, scholarship);
-            System.out.println("Invoice generated: " + invoice);
             return ResponseEntity.status(HttpStatus.CREATED).body(invoice); // Retorna 201 Created con la factura
                                                                             // generada
         } catch (Exception e) {
@@ -59,11 +63,12 @@ public class EnrollmentController {
         }
     }
 
-    @PostMapping("/processPayment")
-    public ResponseEntity<String> processPayment(@RequestBody Payment payment) {
-        // Extrae el objeto Payment y el monto del objeto PaymentRequest
+    @PostMapping("/process-payment")
+    public ResponseEntity<String> processPayment(@RequestBody ProcessPaymentRequest processPaymentRequest) {
+        Long studentId = processPaymentRequest.getStudentId();
+        Payment payment = processPaymentRequest.getPayment();
 
-        boolean paymentSuccess = enrollmentFacade.processPayment(payment);
+        boolean paymentSuccess = enrollmentFacade.processPayment(payment, studentId);
         if (paymentSuccess) {
             return ResponseEntity.ok("Pago procesado correctamente. ID de transacción: " + payment.getTransactionId());
         } else {
@@ -71,7 +76,7 @@ public class EnrollmentController {
         }
     }
 
-    @GetMapping("/confirmEnrollment")
+    @GetMapping("/confirm-enrollment")
     public ResponseEntity<String> confirmEnrollment() {
         String confirmationMessage = enrollmentFacade.confirmEnrollment();
         if (confirmationMessage != null && !confirmationMessage.isEmpty()) {

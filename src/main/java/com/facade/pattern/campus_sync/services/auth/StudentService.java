@@ -41,14 +41,17 @@ public class StudentService {
     }
 
     public Student updateStudent(Long id, Student updatedStudent) {
-        Optional<Student> existingStudent = studentRepository.findById(id);
-        if (existingStudent.isPresent()) {
-            Student student = existingStudent.get();
+        Optional<Student> existingStudentOptional = studentRepository.findById(id);
+        if (existingStudentOptional.isPresent()) {
+            Student existingStudent = existingStudentOptional.get();
+
             // Actualiza los campos necesarios
-            student.setName(updatedStudent.getName());
-            student.setAcademicProgram(updatedStudent.getAcademicProgram());
+            existingStudent.setName(updatedStudent.getName());
+            existingStudent.setAcademicProgram(updatedStudent.getAcademicProgram());
+            existingStudent.setMoney(updatedStudent.getMoney()); // Actualiza el dinero del estudiante
+
             // Guarda los cambios
-            return studentRepository.save(student); // Devuelve el estudiante actualizado
+            return studentRepository.save(existingStudent); // Devuelve el estudiante actualizado
         }
         return null; // O lanza una excepción si no se encuentra
     }

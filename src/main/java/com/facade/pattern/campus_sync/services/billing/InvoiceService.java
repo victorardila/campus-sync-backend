@@ -23,7 +23,7 @@ public class InvoiceService {
     }
 
     // Crear una nueva factura
-    public Invoice createInvoice(Student student, List<Course> courses, Scholarship scholarship, double totalAmount) {
+    public Invoice saveInvoice(Student student, List<Course> courses, Scholarship scholarship, double totalAmount) {
         // Crear un objeto Invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceDate(LocalDateTime.now());
